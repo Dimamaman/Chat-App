@@ -1,4 +1,4 @@
-package uz.gita.dima.chat_app.adapter
+package uz.gita.dima.chat_app.presenter.adapter
 
 import android.content.Context
 import android.content.Intent
@@ -7,10 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.auth.FirebaseAuth
 import uz.gita.dima.chat_app.ChatActivity
 import uz.gita.dima.chat_app.R
-import uz.gita.dima.chat_app.data.User
+import uz.gita.dima.chat_app.data.common.User
 
 class UserAdapter(val context: Context, val userList: ArrayList<User>) :
     RecyclerView.Adapter<UserAdapter.UserViewHolder>() {

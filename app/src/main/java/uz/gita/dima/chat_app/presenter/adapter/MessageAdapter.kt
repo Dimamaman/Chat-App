@@ -1,4 +1,4 @@
-package uz.gita.dima.chat_app.adapter
+package uz.gita.dima.chat_app.presenter.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -8,7 +8,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import uz.gita.dima.chat_app.R
-import uz.gita.dima.chat_app.data.Message
+import uz.gita.dima.chat_app.data.common.Message
 
 class MessageAdapter(val context: Context, val messageList: ArrayList<Message>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {

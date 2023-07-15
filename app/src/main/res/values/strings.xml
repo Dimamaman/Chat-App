@@ -3,9 +3,12 @@
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
-    <string name="sign_in">Sign In</string>
     <string name="name">Name</string>
     <string name="log_out">Log Out</string>
     <string name="message">Message</string>
-    <string name="chats">Chats</string>
+    <string name="chats">Users</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="registration">Registration</string>
+    <string name="error">Error</string>
+    <string name="close">Close</string>
 </resources>

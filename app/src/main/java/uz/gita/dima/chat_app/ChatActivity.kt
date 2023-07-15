@@ -3,11 +3,10 @@ package uz.gita.dima.chat_app
 import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import uz.gita.dima.chat_app.adapter.MessageAdapter
-import uz.gita.dima.chat_app.data.Message
+import uz.gita.dima.chat_app.presenter.adapter.MessageAdapter
+import uz.gita.dima.chat_app.data.common.Message
 import uz.gita.dima.chat_app.databinding.ActivityChatBinding
 
 class ChatActivity : AppCompatActivity() {
