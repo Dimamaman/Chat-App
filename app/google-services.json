@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "26707873658",
+    "project_id": "chat-app-eefa8",
+    "storage_bucket": "chat-app-eefa8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:26707873658:android:9b018ce95be255d5fcd0c3",
+        "android_client_info": {
+          "package_name": "uz.gita.dima.chat_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "26707873658-0t8vnsdnal49c50j5t26se51it894v13.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXkG9y_vZY6XkfaAPHbW2TTXeWLzHEcQU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "26707873658-0t8vnsdnal49c50j5t26se51it894v13.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
