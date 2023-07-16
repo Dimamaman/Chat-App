@@ -35,17 +35,20 @@ class MainScreenViewModelImpl @Inject constructor(
     override fun getAllUsers() {
         viewModelScope.launch {
             if (hasConnection()) {
+                loadingSharedFlow.emit(true)
                 authUseCase.getAllUsers().onEach {
                     Log.d("TTT","ViewModel list -> kirdi")
                     when(it) {
                         is ResultData.Success -> {
                             it.onSuccess { list ->
+                                loadingSharedFlow.emit(false)
                                 Log.d("TTT","ViewModel list -> $list")
                                 allUser.value = list
                             }
                         }
 
                         is ResultData.Message -> {
+                            loadingSharedFlow.emit(false)
                             Log.d("TTT","ViewModel list -> Message")
                             it.onMessage { errorMessage ->
                                 messageSharedFlow.emit(errorMessage)
@@ -53,6 +56,7 @@ class MainScreenViewModelImpl @Inject constructor(
                         }
 
                         is ResultData.Error -> {
+                            loadingSharedFlow.emit(false)
                             Log.d("TTT","ViewModel list -> Errorg'a tusti")
                             // Error joq
                         }
@@ -60,6 +64,7 @@ class MainScreenViewModelImpl @Inject constructor(
                 }.launchIn(viewModelScope)
 
             } else {
+                loadingSharedFlow.emit(false)
                 messageSharedFlow.emit("No Internet Connection")
             }
         }

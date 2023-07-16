@@ -30,6 +30,7 @@ class AuthRepositoryImpl @Inject constructor(
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         sharedPref.uuid = mAuth.currentUser?.uid
+                        addUserToDatabase(name = name, email = email, uid = sharedPref.uuid, password)
                         trySend(ResultData.Success("Successfully Signed"))
                     }
                 }
@@ -38,6 +39,10 @@ class AuthRepositoryImpl @Inject constructor(
                 }
             awaitClose()
         }
+
+    private fun addUserToDatabase(name: String, email: String, uid: String?, password: String) {
+        mDbRef.child("users").child(uid!!).setValue(User(name = name, email = email, uid = uid, password = password))
+    }
 
     override fun login(email: String, password: String): Flow<ResultData<String>> = callbackFlow {
 
@@ -63,7 +68,9 @@ class AuthRepositoryImpl @Inject constructor(
                 userList.clear()
                 for (postSnapshot in snapshot.children) {
                     val currentUser = postSnapshot.getValue(User::class.java)
-                    if (mAuth.currentUser?.uid != currentUser?.uid) {
+                    Log.d("SSSS","Current User -> $currentUser")
+                    Log.d("SSSS","mAuth current user -> ${mAuth.currentUser?.uid}")
+                    if (sharedPref.uuid != currentUser?.uid) {
                         userList.add(currentUser!!)
                         Log.d("TTT", "UserList Repo -> $userList")
                     }
@@ -135,38 +142,4 @@ class AuthRepositoryImpl @Inject constructor(
             }
         awaitClose()
     }
-
 }
-
-
-//        binding.bntSend.setOnClickListener {
-//            val message = binding.inputMessage.text.toString()
-//            val messageObject = Message(message, senderUID)
-//
-//            mDbRef.child("chats").child(sender!!).child("messages").push().setValue(messageObject)
-//                .addOnSuccessListener {
-//                    mDbRef.child("chats").child(receiver!!).child("messages").push()
-//                        .setValue(messageObject)
-//                }
-//
-//            binding.inputMessage.text?.clear()
-//        }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

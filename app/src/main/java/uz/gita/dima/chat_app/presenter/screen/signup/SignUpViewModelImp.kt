@@ -35,6 +35,7 @@ class SignUpViewModelImp @Inject constructor(
                 authUseCase.signUp(name, email, password).collectLatest {
                     when(it) {
                         is ResultData.Error -> {
+                            loadingSharedFlow.emit(false)
                             it.error.message?.let { it1 -> errorSharedFlow.emit(it1) }
                         }
 
@@ -48,16 +49,18 @@ class SignUpViewModelImp @Inject constructor(
                                 }
                                 Log.d("TTT","Success -> $success")
                                 messageSharedFlow.emit(success)
+                                loadingSharedFlow.emit(false)
                                 direction.navigateToMain()
                             }
                         }
 
                         is  ResultData.Message -> {
-
+                            loadingSharedFlow.emit(false)
                         }
                     }
                 }
             } else {
+                loadingSharedFlow.emit(false)
                 messageSharedFlow.emit("No Internet Connection")
             }
         }
