@@ -11,4 +11,8 @@ class AuthUseCaseImpl @Inject constructor(
 ): AuthUseCase {
     override fun signUp(name: String, email: String, password: String): Flow<ResultData<String>> =
         authRepository.signUp(name, email, password)
+
+    override fun login(email: String, password: String): Flow<ResultData<String>> =
+        authRepository.login(email, password)
+
 }

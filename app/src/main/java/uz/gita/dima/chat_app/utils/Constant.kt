@@ -8,6 +8,7 @@ object Constant {
     const val EMAIL = "email"
     const val PASSWORD = "password"
     const val UUID = "uuid"
+    const val IS_LOGGED = "is_logged"
 }
 
 fun <T : ViewBinding> T.include(block: T.() -> Unit) {

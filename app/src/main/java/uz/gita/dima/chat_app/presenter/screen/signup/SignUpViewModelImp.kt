@@ -18,7 +18,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SignUpViewModelImp @Inject constructor(
     private val sharedPref: SharedPref,
-    private val authUseCase: AuthUseCase
+    private val authUseCase: AuthUseCase,
+    private val direction: SignUpScreenDirection
 ): ViewModel(), SignUpViewModel{
 
     override val loadingSharedFlow = MutableSharedFlow<Boolean>()
@@ -43,9 +44,11 @@ class SignUpViewModelImp @Inject constructor(
                                     this.name = name
                                     this.email = email
                                     this.password = password
+                                    this.isLogged = true
                                 }
                                 Log.d("TTT","Success -> $success")
                                 messageSharedFlow.emit(success)
+                                direction.navigateToMain()
                             }
                         }
 
@@ -57,6 +60,12 @@ class SignUpViewModelImp @Inject constructor(
             } else {
                 messageSharedFlow.emit("No Internet Connection")
             }
+        }
+    }
+
+    override fun back() {
+        viewModelScope.launch {
+            direction.navigateToLogin()
         }
     }
 }

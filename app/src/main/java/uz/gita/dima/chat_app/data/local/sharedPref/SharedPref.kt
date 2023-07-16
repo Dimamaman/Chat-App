@@ -10,4 +10,6 @@ interface SharedPref {
 
     var uuid: String?
 
+    var isLogged: Boolean
+
 }

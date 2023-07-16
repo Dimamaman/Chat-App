@@ -63,6 +63,11 @@ class SignUpScreen : Fragment(R.layout.screen_sign_up) {
                     viewModel.signUp(name,email, password)
                 }
             }.launchIn(lifecycleScope)
+
+        btnBack.clicks()
+            .onEach {
+                viewModel.back()
+            }.launchIn(lifecycleScope)
     }
 
     private fun check() = binding.include {

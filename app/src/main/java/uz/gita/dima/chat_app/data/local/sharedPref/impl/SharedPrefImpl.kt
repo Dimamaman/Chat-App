@@ -3,6 +3,7 @@ package uz.gita.dima.chat_app.data.local.sharedPref.impl
 import android.content.SharedPreferences
 import uz.gita.dima.chat_app.data.local.sharedPref.SharedPref
 import uz.gita.dima.chat_app.utils.Constant.EMAIL
+import uz.gita.dima.chat_app.utils.Constant.IS_LOGGED
 import uz.gita.dima.chat_app.utils.Constant.NAME
 import uz.gita.dima.chat_app.utils.Constant.PASSWORD
 import uz.gita.dima.chat_app.utils.Constant.UUID
@@ -25,5 +26,9 @@ class SharedPrefImpl @Inject constructor(private val pref: SharedPreferences) : 
     override var uuid: String?
         get() = pref.getString(UUID, "")
         set(value) = pref.edit().putString(UUID, value).apply()
+
+    override var isLogged: Boolean
+        get() = pref.getBoolean(IS_LOGGED,false)
+        set(value) = pref.edit().putBoolean(IS_LOGGED, value).apply()
 
 }
