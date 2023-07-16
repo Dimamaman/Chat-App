@@ -64,7 +64,7 @@ class AuthRepositoryImpl @Inject constructor(
                     val currentUser = postSnapshot.getValue(User::class.java)
                     if (mAuth.currentUser?.uid != currentUser?.uid) {
                         userList.add(currentUser!!)
-                        Log.d("TTT","UserList Repo -> $userList")
+                        Log.d("TTT", "UserList Repo -> $userList")
                     }
                 }
                 trySend(ResultData.Success(userList))
@@ -76,4 +76,78 @@ class AuthRepositoryImpl @Inject constructor(
         })
         awaitClose()
     }
+
+    override fun getAllMessagesBySender(sender: String): Flow<ResultData<List<Message>>> =
+        callbackFlow {
+            val messageList = ArrayList<Message>()
+            mDbRef.child("chats").child(sender).child("messages")
+                .addValueEventListener(object : ValueEventListener {
+                    @SuppressLint("NotifyDataSetChanged")
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        messageList.clear()
+                        for (postSnapshot in snapshot.children) {
+                            val message = postSnapshot.getValue(Message::class.java)
+                            messageList.add(message!!)
+                        }
+                        trySend(ResultData.Success(messageList))
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        trySend(ResultData.Message("No Messages"))
+                    }
+                })
+            awaitClose()
+        }
+
+    override fun sendMessage(
+        sender: String,
+        receiver: String,
+        messageObject: Message
+    ): Flow<ResultData<Unit>> = callbackFlow {
+
+        mDbRef.child("chats").child(sender).child("messages").push().setValue(messageObject)
+            .addOnSuccessListener {
+                mDbRef.child("chats").child(receiver).child("messages").push()
+                    .setValue(messageObject)
+            }
+            .addOnFailureListener {
+                trySend(ResultData.Error(it))
+            }
+        trySend(ResultData.Success(Unit))
+        awaitClose()
+    }
+
 }
+
+
+//        binding.bntSend.setOnClickListener {
+//            val message = binding.inputMessage.text.toString()
+//            val messageObject = Message(message, senderUID)
+//
+//            mDbRef.child("chats").child(sender!!).child("messages").push().setValue(messageObject)
+//                .addOnSuccessListener {
+//                    mDbRef.child("chats").child(receiver!!).child("messages").push()
+//                        .setValue(messageObject)
+//                }
+//
+//            binding.inputMessage.text?.clear()
+//        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

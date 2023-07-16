@@ -1,6 +1,7 @@
 package uz.gita.dima.chat_app.domain.usecase.imp
 
 import kotlinx.coroutines.flow.Flow
+import uz.gita.dima.chat_app.data.common.Message
 import uz.gita.dima.chat_app.data.common.User
 import uz.gita.dima.chat_app.domain.repository.AuthRepository
 import uz.gita.dima.chat_app.domain.usecase.AuthUseCase
@@ -17,5 +18,16 @@ class AuthUseCaseImpl @Inject constructor(
         authRepository.login(email, password)
 
     override fun getAllUsers(): Flow<ResultData<List<User>>> = authRepository.getAllUsers()
+
+    override fun getAllMessagesBySender(sender: String): Flow<ResultData<List<Message>>> =
+        authRepository.getAllMessagesBySender(sender)
+
+    override fun sendMessage(
+        sender: String,
+        receiver: String,
+        messageObject: Message
+    ): Flow<ResultData<Unit>> {
+        return authRepository.sendMessage(sender, receiver, messageObject)
+    }
 
 }
