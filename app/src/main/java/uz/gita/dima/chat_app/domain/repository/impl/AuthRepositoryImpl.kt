@@ -88,6 +88,7 @@ class AuthRepositoryImpl @Inject constructor(
     override fun getAllMessagesBySender(sender: String): Flow<ResultData<List<Message>>> =
         callbackFlow {
             val messageList = ArrayList<Message>()
+            Log.d("DDDD","senderId -> $sender")
             mDbRef.child("chats").child(sender).child("messages")
                 .addValueEventListener(object : ValueEventListener {
                     @SuppressLint("NotifyDataSetChanged")
@@ -115,27 +116,9 @@ class AuthRepositoryImpl @Inject constructor(
 
         mDbRef.child("chats").child(sender).child("messages").push().setValue(messageObject)
             .addOnSuccessListener {
-//                mDbRef.child("chats").child(receiver).child("messages").push()
-//                    .setValue(messageObject)
-
-//                val messageList = ArrayList<Message>()
-//                mDbRef.child("chats").child(sender).child("messages")
-//                    .addValueEventListener(object : ValueEventListener {
-//                        @SuppressLint("NotifyDataSetChanged")
-//                        override fun onDataChange(snapshot: DataSnapshot) {
-//                            messageList.clear()
-//                            for (postSnapshot in snapshot.children) {
-//                                val message = postSnapshot.getValue(Message::class.java)
-//                                messageList.add(message!!)
-//                            }
-//                        }
-//
-//                        override fun onCancelled(error: DatabaseError) {
-//                            trySend(ResultData.Message("No Messages"))
-//                        }
-//                    })
-//                trySend(ResultData.Success(messageList))
-//                trySend(ResultData.Success(listOf(messageObject)))
+                mDbRef.child("chats").child(receiver).child("messages").push()
+                    .setValue(messageObject)
+                trySend(ResultData.Success(Unit))
             }
             .addOnFailureListener {
                 trySend(ResultData.Error(it))
