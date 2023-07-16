@@ -1,12 +1,15 @@
 package uz.gita.dima.chat_app.presenter.screen.chat
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
@@ -17,6 +20,8 @@ import uz.gita.dima.chat_app.data.common.Message
 import uz.gita.dima.chat_app.databinding.ScreenChatBinding
 import uz.gita.dima.chat_app.presenter.adapter.MessageAdapter
 import uz.gita.dima.chat_app.utils.*
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -33,6 +38,7 @@ class ChatScreen : Fragment(R.layout.screen_chat) {
 
     private val args: ChatScreenArgs by navArgs()
 
+    @SuppressLint("SimpleDateFormat")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = binding.include {
         val name = args.user.name
         binding.messageReceiverName.text = name
@@ -46,6 +52,7 @@ class ChatScreen : Fragment(R.layout.screen_chat) {
         viewModel.getMessagesBySender(sender!!)
         viewModel.allMessage.observe(viewLifecycleOwner, allMessageList)
 
+        chatRecyclerview.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, true)
         chatRecyclerview.adapter = messageAdapter
 
         viewModel.loadingSharedFlow.onEach {
@@ -62,10 +69,14 @@ class ChatScreen : Fragment(R.layout.screen_chat) {
 
         bntSend.setOnClickListener {
             val message = inputMessage.text.toString()
-            val messageObject = Message(message, senderUID)
+            val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
+            val currentDate = sdf.format(Date())
+
+            val messageObject = Message(message, senderUID, currentDate)
 
             viewModel.sendMessage(sender!!, receiver!!, messageObject)
             binding.inputMessage.text?.clear()
+            hideKeyboard()
         }
 
         btnBack.setOnClickListener {
@@ -73,7 +84,11 @@ class ChatScreen : Fragment(R.layout.screen_chat) {
         }
     }
 
-    private val allMessageList = Observer<List<Message>> {
-        messageAdapter.submitList(it)
+    private val allMessageList = Observer<List<Message>> {data ->
+        Log.d("ChatScreen","curList size -> ${messageAdapter.currentList.size}")
+        Log.d("ChatScreen","new list size -> ${data.size}")
+
+        messageAdapter.submitList(data)
+        messageAdapter.notifyDataSetChanged()
     }
 }

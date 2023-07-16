@@ -10,6 +10,7 @@ import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.withContext
 import uz.gita.dima.chat_app.data.common.Message
 import uz.gita.dima.chat_app.data.common.User
 import uz.gita.dima.chat_app.data.local.sharedPref.SharedPref
@@ -107,13 +108,31 @@ class AuthRepositoryImpl @Inject constructor(
 
         mDbRef.child("chats").child(sender).child("messages").push().setValue(messageObject)
             .addOnSuccessListener {
-                mDbRef.child("chats").child(receiver).child("messages").push()
-                    .setValue(messageObject)
+//                mDbRef.child("chats").child(receiver).child("messages").push()
+//                    .setValue(messageObject)
+
+//                val messageList = ArrayList<Message>()
+//                mDbRef.child("chats").child(sender).child("messages")
+//                    .addValueEventListener(object : ValueEventListener {
+//                        @SuppressLint("NotifyDataSetChanged")
+//                        override fun onDataChange(snapshot: DataSnapshot) {
+//                            messageList.clear()
+//                            for (postSnapshot in snapshot.children) {
+//                                val message = postSnapshot.getValue(Message::class.java)
+//                                messageList.add(message!!)
+//                            }
+//                        }
+//
+//                        override fun onCancelled(error: DatabaseError) {
+//                            trySend(ResultData.Message("No Messages"))
+//                        }
+//                    })
+//                trySend(ResultData.Success(messageList))
+//                trySend(ResultData.Success(listOf(messageObject)))
             }
             .addOnFailureListener {
                 trySend(ResultData.Error(it))
             }
-        trySend(ResultData.Success(Unit))
         awaitClose()
     }
 

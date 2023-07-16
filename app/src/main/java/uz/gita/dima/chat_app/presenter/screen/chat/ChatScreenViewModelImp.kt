@@ -1,5 +1,6 @@
 package uz.gita.dima.chat_app.presenter.screen.chat
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -29,14 +30,15 @@ class ChatScreenViewModelImp @Inject constructor(
     override val allMessage = MutableLiveData<List<Message>>()
 
     override fun getMessagesBySender(sender: String) {
-        viewModelScope.launch {
+        viewModelScope.launch() {
             if (hasConnection()) {
                 authUseCase.getAllMessagesBySender(sender).onEach {
                     when (it) {
 
                         is ResultData.Success -> {
                             it.onSuccess { messageList ->
-                                allMessage.value = messageList
+                                Log.d("GGG","New message list -> $messageList\n")
+                                allMessage.value = messageList.reversed()
                             }
                         }
 
@@ -72,13 +74,14 @@ class ChatScreenViewModelImp @Inject constructor(
                 authUseCase.sendMessage(sender, receiver, messageObject).onEach {
                     when(it) {
                         is ResultData.Success -> {
-                            it.onSuccess {
+                            it.onSuccess { list ->
                                 messageSharedFlow.emit("Send")
                             }
                         }
 
                         is ResultData.Error -> {
                             it.onError { error ->
+                                Log.d("ChatScreen", "error -> ${error.message}")
                                 error.message?.let { it1 -> errorSharedFlow.emit(it1) }
                             }
                         }

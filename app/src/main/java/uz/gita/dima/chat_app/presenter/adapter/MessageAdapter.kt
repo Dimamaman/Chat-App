@@ -60,7 +60,7 @@ private var messageItemCallback = object : DiffUtil.ItemCallback<Message>() {
         oldItem == newItem
 
     override fun areContentsTheSame(oldItem: Message, newItem: Message): Boolean =
-        oldItem.message == newItem.message && oldItem.senderId == newItem.senderId
+        oldItem == newItem
 }
 
 
