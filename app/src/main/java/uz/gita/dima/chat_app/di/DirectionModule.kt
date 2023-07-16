@@ -7,6 +7,8 @@ import dagger.hilt.components.SingletonComponent
 import uz.gita.dima.chat_app.presenter.screen.login.LoginScreenDirection
 import uz.gita.dima.chat_app.presenter.screen.login.LoginScreenDirectionImpl
 import uz.gita.dima.chat_app.presenter.screen.login.LoginScreenDirections
+import uz.gita.dima.chat_app.presenter.screen.main.MainScreenDirection
+import uz.gita.dima.chat_app.presenter.screen.main.MainScreenDirectionImpl
 import uz.gita.dima.chat_app.presenter.screen.signup.SignUpScreenDirection
 import uz.gita.dima.chat_app.presenter.screen.signup.SignUpScreenDirectionImpl
 import uz.gita.dima.chat_app.presenter.screen.splash.SplashScreenDirection
@@ -24,4 +26,7 @@ interface DirectionModule {
 
     @Binds
     fun bindLoginScreenDirection(impl: LoginScreenDirectionImpl): LoginScreenDirection
+
+    @Binds
+    fun bindMainScreenDirection(impl: MainScreenDirectionImpl): MainScreenDirection
 }

@@ -31,7 +31,9 @@
             app:destination="@id/signUpScreen" />
         <action
             android:id="@+id/action_loginScreen_to_mainScreen"
-            app:destination="@id/mainScreen" />
+            app:destination="@id/mainScreen"
+            app:popUpTo="@id/loginScreen"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/signUpScreen"
@@ -40,11 +42,31 @@
         tools:layout="@layout/screen_sign_up">
         <action
             android:id="@+id/action_signUpScreen_to_mainScreen"
-            app:destination="@id/mainScreen" />
+            app:destination="@id/mainScreen"
+            app:popUpTo="@id/signUpScreen"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/mainScreen"
         android:name="uz.gita.dima.chat_app.presenter.screen.main.MainScreen"
         android:label="MainScreen"
-        tools:layout="@layout/screen_main"/>
+        tools:layout="@layout/screen_main">
+        <action
+            android:id="@+id/action_mainScreen_to_chatScreen"
+            app:destination="@id/chatScreen" />
+        <action
+            android:id="@+id/action_mainScreen_to_splashScreen"
+            app:destination="@id/splashScreen"
+            app:popUpTo="@id/mainScreen"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/chatScreen"
+        android:name="uz.gita.dima.chat_app.presenter.screen.chat.ChatScreen"
+        android:label="ChatScreen"
+        tools:layout="@layout/screen_chat">
+        <argument
+            android:name="user"
+            app:argType="uz.gita.dima.chat_app.data.common.User" />
+    </fragment>
 </navigation>

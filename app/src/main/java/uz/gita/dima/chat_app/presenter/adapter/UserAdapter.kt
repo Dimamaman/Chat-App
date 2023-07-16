@@ -1,43 +1,55 @@
 package uz.gita.dima.chat_app.presenter.adapter
 
-import android.content.Context
-import android.content.Intent
-import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.AppCompatTextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import uz.gita.dima.chat_app.ChatActivity
 import uz.gita.dima.chat_app.R
 import uz.gita.dima.chat_app.data.common.User
+import uz.gita.dima.chat_app.databinding.UserItemBinding
+import uz.gita.dima.chat_app.utils.include
+import uz.gita.dima.chat_app.utils.inflate
+import javax.inject.Inject
 
-class UserAdapter(val context: Context, val userList: ArrayList<User>) :
-    RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
+class UserAdapter @Inject constructor(): ListAdapter<User, UserAdapter.ViewHolder>(userItemCallback) {
 
-    inner class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val userName = itemView.findViewById<AppCompatTextView>(R.id.userName)
+    private var userClickListener: ((User) -> Unit)? = null
+
+    fun setUserClickListener(l: (User) -> Unit) {
+        userClickListener = l
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
-        val view: View = LayoutInflater.from(context).inflate(R.layout.user_item, parent, false)
-        return UserViewHolder(view)
-    }
+    inner class ViewHolder(private val binding: UserItemBinding): RecyclerView.ViewHolder(binding.root) {
 
-    override fun getItemCount(): Int {
-        return userList.size
-    }
+        init {
+            binding.root.setOnClickListener {
+                userClickListener?.invoke(getItem(absoluteAdapterPosition))
+            }
+        }
 
-    override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
-        val currentUser = userList[position]
-        holder.userName.text = currentUser.name
-
-        holder.itemView.setOnClickListener {
-            val intent = Intent(context, ChatActivity::class.java)
-
-            intent.putExtra("name",currentUser.name)
-            intent.putExtra("uid",currentUser.uid)
-
-            context.startActivity(intent)
+        fun bind() = binding.include {
+            val user = getItem(absoluteAdapterPosition)
+            userName.text = user.name
         }
     }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
+        ViewHolder(UserItemBinding.bind(parent.inflate(R.layout.user_item)))
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.bind()
+    }
 }
+
+private var userItemCallback = object : DiffUtil.ItemCallback<User>() {
+    override fun areItemsTheSame(oldItem: User, newItem: User): Boolean =
+        oldItem == newItem
+
+    override fun areContentsTheSame(oldItem: User, newItem: User): Boolean =
+        oldItem.name == newItem.name &&
+                oldItem.email == newItem.email &&
+                oldItem.password == newItem.password &&
+                oldItem.uid == newItem.uid
+
+}
+

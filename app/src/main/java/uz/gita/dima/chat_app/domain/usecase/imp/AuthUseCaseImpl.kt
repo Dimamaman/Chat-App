@@ -1,6 +1,7 @@
 package uz.gita.dima.chat_app.domain.usecase.imp
 
 import kotlinx.coroutines.flow.Flow
+import uz.gita.dima.chat_app.data.common.User
 import uz.gita.dima.chat_app.domain.repository.AuthRepository
 import uz.gita.dima.chat_app.domain.usecase.AuthUseCase
 import uz.gita.dima.chat_app.utils.ResultData
@@ -14,5 +15,7 @@ class AuthUseCaseImpl @Inject constructor(
 
     override fun login(email: String, password: String): Flow<ResultData<String>> =
         authRepository.login(email, password)
+
+    override fun getAllUsers(): Flow<ResultData<List<User>>> = authRepository.getAllUsers()
 
 }

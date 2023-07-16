@@ -1,45 +1,49 @@
-package uz.gita.dima.chat_app
+package uz.gita.dima.chat_app.presenter.screen.chat
 
 import android.annotation.SuppressLint
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.navArgs
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import uz.gita.dima.chat_app.presenter.adapter.MessageAdapter
+import dagger.hilt.android.AndroidEntryPoint
+import uz.gita.dima.chat_app.R
 import uz.gita.dima.chat_app.data.common.Message
-import uz.gita.dima.chat_app.databinding.ActivityChatBinding
+import uz.gita.dima.chat_app.databinding.ScreenChatBinding
+import uz.gita.dima.chat_app.presenter.adapter.MessageAdapter
+import uz.gita.dima.chat_app.utils.include
 
-class ChatActivity : AppCompatActivity() {
+@AndroidEntryPoint
+class ChatScreen : Fragment(R.layout.screen_chat) {
 
-    private var _binding: ActivityChatBinding? = null
-    private val binding get() = _binding!!
+    private val binding: ScreenChatBinding by viewBinding()
 
     private lateinit var messageAdapter: MessageAdapter
     private lateinit var messageList: ArrayList<Message>
 
+    private lateinit var mDbRef: DatabaseReference
+
     private var receiver: String? = null
     private var sender: String? = null
 
-    private lateinit var mDbRef: DatabaseReference
+    private val args: ChatScreenArgs by navArgs()
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        _binding = ActivityChatBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) = binding.include {
 
         mDbRef = FirebaseDatabase.getInstance().reference
 
-        val name = intent.getStringExtra("name")
+        val name = args.user.name
         binding.messageReceiverName.text = name
-        val receiverUID = intent.getStringExtra("uid")
+        val receiverUID = args.user.uid
         val senderUID = FirebaseAuth.getInstance().currentUser?.uid
 
         sender = receiverUID + senderUID
         receiver = senderUID + receiverUID
 
         messageList = ArrayList()
-        messageAdapter = MessageAdapter(this, messageList)
+        messageAdapter = MessageAdapter(requireContext(), messageList)
 
         binding.chatRecyclerview.adapter = messageAdapter
 
